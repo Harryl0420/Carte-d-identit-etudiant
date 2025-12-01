@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Cartes d'Étudiant</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode.js/1.4.4/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <!-- Écran de connexion -->
+    <div id="loginScreen" class="screen active">
+        <div class="login-container">
+            <div class="logo-section">
+                <h1 class="logo-text">JFN</h1>
+                <p class="logo-subtitle">HIGHTECH UNIVERSITY INSTITUTE</p>
+            </div>
+            <form id="loginForm" class="login-form">
+                <h2>Connexion / Login</h2>
+                <div class="form-group">
+                    <label for="username">Nom d'utilisateur / Username</label>
+                    <input type="text" id="username" placeholder="Entrez votre nom" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Mot de passe / Password</label>
+                    <input type="password" id="password" placeholder="Entrez votre mot de passe" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Se connecter / Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Page principale -->
+    <div id="mainScreen" class="screen">
+        <nav class="navbar">
+            <div class="nav-left">
+                <h1 class="app-title">Générateur de Cartes d'Étudiant</h1>
+            </div>
+            <div class="nav-right">
+                <button id="navFormBtn" class="nav-btn active" data-section="form">Créer une Carte</button>
+                <button id="navDashboardBtn" class="nav-btn" data-section="dashboard">Tableau de Bord</button>
+                <button id="logoutBtn" class="nav-btn logout">Déconnexion</button>
+            </div>
+        </nav>
+
+        <!-- Section Formulaire -->
+        <div id="formSection" class="section active">
+            <div class="container">
+                <div class="form-wrapper">
+                    <h2>Créer une Nouvelle Carte / Create New Card</h2>
+                    <form id="cardForm" class="card-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="matricule">Matricule / Student ID *</label>
+                                <input type="text" id="matricule" placeholder="Ex: JFN-2098-ESI-TEY" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="nom">Nom Complet / Full Name *</label>
+                                <input type="text" id="nom" placeholder="Ex: KENMEUGNE KENMGANG HARRYL" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="dob">Date de Naissance / Date of Birth *</label>
+                                <input type="date" id="dob" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cycle">Cycle / Program *</label>
+                                <input type="text" id="cycle" placeholder="Ex: INGENIEURIE" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="niveau">Niveau / Level *</label>
+                                <input type="number" id="niveau" placeholder="Ex: 4" min="1" max="6" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="photo">Photo de Profil / Profile Photo *</label>
+                                <input type="file" id="photo" accept="image/*" required>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Prévisualiser la Carte</button>
+                            <button type="reset" class="btn btn-secondary">Réinitialiser</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Prévisualisation de la Carte -->
+                <div class="preview-wrapper">
+                    <h2>Prévisualisation / Preview</h2>
+                    <div class="card-flip-container" id="cardFlipContainer">
+                        <div class="card-flip">
+                            <!-- Recto -->
+                            <div class="card-face card-front">
+                                <div class="card-header">
+                                    <h1 class="card-title">STUDENT IDENTITY CARD</h1>
+                                </div>
+                                <div class="card-content">
+                                    <div class="card-left">
+                                        <div class="card-field">
+                                            <span class="card-label">MATRICULE</span>
+                                            <span class="card-label-fr">MATRICULE</span>
+                                            <span class="card-value" id="previewMatricule">-</span>
+                                        </div>
+                                        <div class="card-field">
+                                            <span class="card-label">NAME</span>
+                                            <span class="card-label-fr">NOM</span>
+                                            <span class="card-value" id="previewNom">-</span>
+                                        </div>
+                                        <div class="card-field">
+                                            <span class="card-label">DATE OF BIRTH</span>
+                                            <span class="card-label-fr">DATE DE NAISSANCE</span>
+                                            <span class="card-value" id="previewDob">-</span>
+                                        </div>
+                                        <div class="card-field">
+                                            <span class="card-label">CYCLE</span>
+                                            <span class="card-label-fr">CYCLE</span>
+                                            <span class="card-value" id="previewCycle">-</span>
+                                        </div>
+                                        <div class="card-field">
+                                            <span class="card-label">LEVEL</span>
+                                            <span class="card-label-fr">NIVEAU</span>
+                                            <span class="card-value" id="previewNiveau">-</span>
+                                        </div>
+                                    </div>
+                                    <div class="card-right">
+                                        <img id="previewPhoto" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Crect fill='%23ddd' width='150' height='150'/%3E%3C/svg%3E" alt="Photo" class="card-photo">
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="card-logo">JFN</div>
+                                </div>
+                            </div>
+
+                            <!-- Verso -->
+                            <div class="card-face card-back">
+                                <div class="card-header">
+                                    <h1 class="card-title-back">JFN - HIGHTECH UNIVERSITY INSTITUTE</h1>
+                                </div>
+                                <div class="card-content-back">
+                                    <div class="card-eagle">
+                                        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M50 20 L60 40 L75 35 L65 55 L80 60 L60 70 L65 85 L50 75 L35 85 L40 70 L20 60 L35 55 L25 35 L40 40 Z" fill="currentColor"/>
+                                        </svg>
+                                    </div>
+                                    <div id="qrcode" class="qr-code"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="preview-controls">
+                        <button id="flipCardBtn" class="btn btn-secondary">Retourner la Carte / Flip Card</button>
+                        <button id="downloadCardBtn" class="btn btn-primary" style="display:none;">Télécharger PNG</button>
+                        <button id="saveCardBtn" class="btn btn-primary">Enregistrer la Carte</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Tableau de Bord -->
+        <div id="dashboardSection" class="section">
+            <div class="container">
+                <h2>Tableau de Bord / Dashboard</h2>
+                <div id="cardsList" class="cards-grid">
+                    <p class="empty-message">Aucune carte créée yet / No cards created</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
